@@ -5,7 +5,7 @@ gh_key*
 *org*.txt
 
 # Output directory contents
-output/*.csv
+scripts/output/*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
