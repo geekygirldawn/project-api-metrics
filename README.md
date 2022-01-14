@@ -14,8 +14,8 @@ slowed down to avoid hitting the rate limit, while the GraphQL version,
 which gathers the same data, runs in less than 15 minutes without hitting
 any rate limits.
 
-    repo_activity.py
-    repo_activity_REST.py
+    scripts/repo_activity.py
+    scripts/repo_activity_REST.py
 
 Note: These scripts gather names and email addresses of 
 committers, which we use to help us find a contact within VMware if we 
