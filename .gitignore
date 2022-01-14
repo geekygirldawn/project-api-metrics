@@ -1,6 +1,9 @@
 # API key
 gh_key*
 
+# Orgs list
+*org*.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
