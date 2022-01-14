@@ -2,6 +2,10 @@
 # SPDX-License-Identifier: BSD-2-Clause
 
 """Repo Activity REST API Version
+This script is comparison with the other script (repo_activity.py)
+which uses the GraphQL API. This one is very slow and should not
+be used to gather data.
+
 This script uses the GitHub REST API to retrieve relevant
 information about all repositories from one or more GitHub
 orgs.

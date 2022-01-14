@@ -6,6 +6,12 @@ This script uses the GitHub GraphQL API to retrieve relevant
 information about all repositories from one or more GitHub
 orgs.
 
+We use this script at VMware to gather basic data about the repositories
+found in dozens of VMware GitHub orgs. We use this to understand whether
+projects are meeting our compliance requirements. We also use this 
+script to find abandoned repos that have outlived their usefulness
+and should be archived.
+
 As input, this script requires a file named 'orgs.txt' containing
 the name of one GitHub org per line residing in the same folder 
 as this script.
