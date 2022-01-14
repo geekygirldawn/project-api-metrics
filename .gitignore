@@ -4,6 +4,9 @@ gh_key*
 # Orgs list
 *org*.txt
 
+# Output directory
+output/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
