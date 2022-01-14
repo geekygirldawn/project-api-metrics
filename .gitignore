@@ -1,3 +1,6 @@
+# API key
+gh_key*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
