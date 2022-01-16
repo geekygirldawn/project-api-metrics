@@ -33,3 +33,24 @@ def read_key(file_name):
         key = kf.readline().rstrip() # remove newline & trailing whitespace
     return key
 
+def read_orgs(file_name):
+    """Retrieves a list of orgs from a file.
+    
+    Parameters
+    ----------
+    file_name : str
+
+    Returns
+    -------
+    org_list : list
+    """
+    import csv
+
+    org_list = []
+
+    with open(file_name) as orgfile:
+        orgs = csv.reader(orgfile)
+        for row in orgs:
+            org_list.append(row[0])
+
+    return org_list

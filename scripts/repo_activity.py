@@ -118,21 +118,20 @@ def get_repo_data(api_token):
     import requests
     import json
     import pandas as pd
+    from common_functions import read_orgs
 
     url = 'https://api.github.com/graphql'
     headers = {'Authorization': 'token %s' % api_token}
     
     repo_info_df = pd.DataFrame()
     
-    org_list = ["cncf","knative"]
-    
     # Read list of orgs from a file
 
-    org_list = []
-    with open('orgs.txt') as orgfile:
-        orgs = csv.reader(orgfile)
-        for row in orgs:
-            org_list.append(row[0])
+    try:
+        org_list = read_orgs('orgs.txt')
+    except:
+        print("Error reading orgs. This script depends on the existance of a file called orgs.txt containing one org per line. Exiting")
+        sys.exit()
     
     for org_name in org_list:  
         has_next_page = True
