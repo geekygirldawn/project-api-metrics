@@ -6,6 +6,7 @@ gh_key*
 
 # Output directory contents
 scripts/output/*.csv
+notebooks/output/*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
