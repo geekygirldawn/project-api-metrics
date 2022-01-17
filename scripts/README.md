@@ -36,13 +36,18 @@ and should be archived.
 
 ### Mystery GitHub Organizations
 
-We use this script at VMware to gather basic data about GitHub orgs that
+We can use this script to gather basic data about GitHub orgs that
 we believe may have been created outside of our process by various
 employees across our business units. We gather the first few members
 of the org to help identify employees who can provide more details
 about the purpose of the org and how it is used.
 
     scripts/mystery_orgs.py
+
+However, since members are private by default, this script may not
+be as useful as just running repo_activity.py on those same orgs
+to also learn more about the repos and get better contact info
+from the commit data.
 
 ## Acceptable Use
 
