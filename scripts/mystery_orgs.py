@@ -121,7 +121,7 @@ def get_org_data(api_token):
 
     try:
         today = datetime.today().strftime('%Y-%m-%d')
-        output_filename = "./output/a_repo_activity_" + today + ".csv"
+        output_filename = "./output/mystery_orgs_" + today + ".csv"
         current_dir = dirname(__file__)
         file_path = join(current_dir, output_filename)
         file = open(file_path, 'w', newline ='')
