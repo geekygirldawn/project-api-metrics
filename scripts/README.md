@@ -26,6 +26,7 @@ which gathers the same data, runs in less than 15 minutes without hitting
 any rate limits.
 
     scripts/repo_activity.py
+    scripts/repo_activity_coc.py
     scripts/repo_activity_REST.py
 
 We use this script at VMware to gather basic data about the repositories
@@ -33,6 +34,11 @@ found in dozens of VMware GitHub orgs. We use this to understand whether
 projects are meeting our compliance requirements. We also use this 
 script to find abandoned repos that have outlived their usefulness
 and should be archived.
+
+Note: repo_activity_coc.py is mostly identical to repo_activity.py, 
+but it adds info about the code of conduct. This is a separate script
+because the codeOfConduct object in the GraphQL API is a bit problematic
+and tends to time out when getting relatively small amounts of data.
 
 ### Mystery GitHub Organizations
 
