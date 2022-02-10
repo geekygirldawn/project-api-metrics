@@ -158,7 +158,7 @@ def get_repo_data(api_token):
                 json_data = json.loads(r.text)
 
                 df_temp = pd.DataFrame(json_data['data']['organization']['repositories']['nodes'])
-                repo_info_df = repo_info_df.append(df_temp, ignore_index=True)
+                repo_info_df = pd.concat([repo_info_df, df_temp])
 
                 has_next_page = json_data["data"]["organization"]["repositories"]["pageInfo"]["hasNextPage"]
 
