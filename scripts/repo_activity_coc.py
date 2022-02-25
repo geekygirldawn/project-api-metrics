@@ -50,7 +50,7 @@ def make_query(after_cursor = None):
 
     return """query RepoQuery($org_name: String!) {
              organization(login: $org_name) {
-               repositories (first: 20 after: AFTER){
+               repositories (first: 10 after: AFTER){
                  pageInfo {
                    hasNextPage
                    endCursor
