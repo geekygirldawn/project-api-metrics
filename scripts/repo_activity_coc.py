@@ -64,6 +64,11 @@ def make_query(after_cursor = None):
                    codeOfConduct{
                      url
                    }
+                   content: object(expression: "HEAD:CONTRIBUTING.md") {
+                     ... on Blob {
+                       abbreviatedOid
+                       }
+                   }
                    isPrivate
                    isFork
                    isEmpty
@@ -196,6 +201,18 @@ def expand_coc(coc):
 repo_info_df['codeOfConduct_url'] = repo_info_df['codeOfConduct'].apply(expand_coc)
 repo_info_df = repo_info_df.drop(columns=['codeOfConduct'])
 
+def expand_contrib(contrib):
+    # Note that the script only finds the file if it exactly matches CONTRIBUTING.md
+    # and will not find contributing.md, CONTRIBUTING.rst, or other variations
+    if pd.isnull(contrib):
+        contrib_file = 'Missing Private or not CONTRIBUTING.md'
+    else:
+        contrib_file = 'CONTRIBUTING.md'
+    return contrib_file
+
+repo_info_df['contrib_file'] = repo_info_df['content'].apply(expand_contrib)
+repo_info_df = repo_info_df.drop(columns=['content'])
+
 def expand_commits(commits):
     if pd.isnull(commits):
         commits_list = [None, None, None, None]
@@ -224,7 +241,7 @@ repo_info_df['commits_list'] = repo_info_df['defaultBranchRef'].apply(expand_com
 repo_info_df[['last_commit_date','author_name','author_email', 'author_login']] = pd.DataFrame(repo_info_df.commits_list.tolist(), index= repo_info_df.index)
 repo_info_df = repo_info_df.drop(columns=['commits_list','defaultBranchRef'])
 
-repo_info_df = repo_info_df[['org','name','nameWithOwner','license','codeOfConduct_url','isPrivate','isFork','isArchived', 'forkCount', 'stargazerCount', 'isEmpty', 'createdAt', 'updatedAt','pushedAt','last_commit_date','author_login','author_name','author_email']] 
+repo_info_df = repo_info_df[['org','name','nameWithOwner','license','codeOfConduct_url', 'contrib_file', 'isPrivate','isFork','isArchived', 'forkCount', 'stargazerCount', 'isEmpty', 'createdAt', 'updatedAt','pushedAt','last_commit_date','author_login','author_name','author_email']] 
 
 # prepare file and write dataframe to csv
 
