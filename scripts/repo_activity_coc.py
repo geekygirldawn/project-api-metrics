@@ -7,10 +7,16 @@ information about all repositories from one or more GitHub
 orgs.
 
 Note: This is identical to repo_activity.py, but it adds info about the
-code of conduct. This is a separate script because the codeOfConduct
-object in the GraphQL API is a bit problematic and tends to time out
-when getting relatively small amounts of data, so this version gets
-data from only 20 repos at a time, instead of 100 in the other script.
+code of conduct and CONTRIBUTING.md files. 
+
+This is a separate script because the codeOfConduct object and getting
+info about files in the GraphQL API is a bit problematic and tends to time
+out when getting relatively small amounts of data, so this version gets
+data from only 10 repos at a time, instead of 100 in the other script.
+
+Note that it will only find CONTRIBUTING.md files that match that exact 
+name and case (not contributing.md or contributing.rst) in public, but
+not private repos.
 
 We use this script at VMware to gather basic data about the repositories
 found in dozens of VMware GitHub orgs. We use this to understand whether
