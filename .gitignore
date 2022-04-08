@@ -8,6 +8,9 @@ gh_key*
 scripts/output/*.csv
 notebooks/output/*.csv
 
+# MacOS files
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
