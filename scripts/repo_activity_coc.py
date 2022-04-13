@@ -186,16 +186,26 @@ repo_info_df = get_repo_data(api_token)
 
 repo_info_df["org"] = repo_info_df["nameWithOwner"].str.split('/').str[0]
 
-def expand_license(license):
-    if pd.isnull(license):
-        license_name = 'Likely Missing'
-    else:
-        license_name = license['name']
-    return license_name
+def expand_name(nested_name):
+    """Takes an API JSON object with nested elements and extracts the name
+    Parameters
+    ----------
+    nested_name : JSON API object
 
-repo_info_df['license'] = repo_info_df['licenseInfo'].apply(expand_license)
+    Returns
+    -------
+    object_name : str
+    """
+    if pd.isnull(nested_name):
+        object_name = 'Likely Missing'
+    else:
+        object_name = nested_name['name']
+    return object_name
+
+repo_info_df['license'] = repo_info_df['licenseInfo'].apply(expand_name)
 repo_info_df = repo_info_df.drop(columns=['licenseInfo'])
 
+repo_info_df['defaultBranch'] = repo_info_df['defaultBranchRef'].apply(expand_name)
 
 def expand_coc(coc):
     if pd.isnull(coc):
