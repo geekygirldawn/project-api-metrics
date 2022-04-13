@@ -185,6 +185,8 @@ def expand_name(nested_name):
 repo_info_df['license'] = repo_info_df['licenseInfo'].apply(expand_name)
 repo_info_df = repo_info_df.drop(columns=['licenseInfo'])
 
+repo_info_df['defaultBranch'] = repo_info_df['defaultBranchRef'].apply(expand_name)
+
 def expand_commits(commits):
     if pd.isnull(commits):
         commits_list = [None, None, None, None]
@@ -213,7 +215,7 @@ repo_info_df['commits_list'] = repo_info_df['defaultBranchRef'].apply(expand_com
 repo_info_df[['last_commit_date','author_name','author_email', 'author_login']] = pd.DataFrame(repo_info_df.commits_list.tolist(), index= repo_info_df.index)
 repo_info_df = repo_info_df.drop(columns=['commits_list','defaultBranchRef'])
 
-repo_info_df = repo_info_df[['org','name','nameWithOwner','license','isPrivate','isFork','isArchived', 'forkCount', 'stargazerCount', 'isEmpty', 'createdAt', 'updatedAt','pushedAt','last_commit_date','author_login','author_name','author_email']] 
+repo_info_df = repo_info_df[['org','name','nameWithOwner','license','defaultBranch','isPrivate','isFork','isArchived', 'forkCount', 'stargazerCount', 'isEmpty', 'createdAt', 'updatedAt','pushedAt','last_commit_date','author_login','author_name','author_email']] 
 
 # prepare file and write dataframe to csv
 
