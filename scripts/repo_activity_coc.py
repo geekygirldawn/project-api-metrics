@@ -257,7 +257,7 @@ repo_info_df['commits_list'] = repo_info_df['defaultBranchRef'].apply(expand_com
 repo_info_df[['last_commit_date','author_name','author_email', 'author_login']] = pd.DataFrame(repo_info_df.commits_list.tolist(), index= repo_info_df.index)
 repo_info_df = repo_info_df.drop(columns=['commits_list','defaultBranchRef'])
 
-repo_info_df = repo_info_df[['org','name','nameWithOwner','license','codeOfConduct_url', 'contrib_file', 'isPrivate','isFork','isArchived', 'forkCount', 'stargazerCount', 'isEmpty', 'createdAt', 'updatedAt','pushedAt','last_commit_date','author_login','author_name','author_email']] 
+repo_info_df = repo_info_df[['org','name','nameWithOwner','license','defaultBranch','codeOfConduct_url', 'contrib_file', 'isPrivate','isFork','isArchived', 'forkCount', 'stargazerCount', 'isEmpty', 'createdAt', 'updatedAt','pushedAt','last_commit_date','author_login','author_name','author_email']] 
 
 # prepare file and write dataframe to csv
 
