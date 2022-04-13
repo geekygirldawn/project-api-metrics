@@ -37,7 +37,7 @@ import csv
 from datetime import datetime
 from time import sleep
 from os.path import dirname, join
-from common_functions import read_key
+from common_functions import read_key, expand_name_df
 
 def make_query(after_cursor = None):
     """Creates and returns a GraphQL query with cursor for pagination"""
@@ -166,26 +166,10 @@ repo_info_df = get_repo_data(api_token)
 
 repo_info_df["org"] = repo_info_df["nameWithOwner"].str.split('/').str[0]
 
-def expand_name(nested_name):
-    """Takes an API JSON object with nested elements and extracts the name
-    Parameters
-    ----------
-    nested_name : JSON API object
-
-    Returns
-    -------
-    object_name : str
-    """
-    if pd.isnull(nested_name):
-        object_name = 'Likely Missing'
-    else:
-        object_name = nested_name['name']
-    return object_name
-
-repo_info_df['license'] = repo_info_df['licenseInfo'].apply(expand_name)
+repo_info_df = expand_name_df(repo_info_df,'licenseInfo','license')
 repo_info_df = repo_info_df.drop(columns=['licenseInfo'])
 
-repo_info_df['defaultBranch'] = repo_info_df['defaultBranchRef'].apply(expand_name)
+repo_info_df = expand_name_df(repo_info_df,'defaultBranchRef','defaultBranch')
 
 def expand_commits(commits):
     if pd.isnull(commits):

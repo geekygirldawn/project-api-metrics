@@ -54,3 +54,42 @@ def read_orgs(file_name):
             org_list.append(row[0])
 
     return org_list
+
+def expand_name_df(df,old_col,new_col):
+    """Takes a dataframe df with an API JSON object with nested elements in old_col, 
+    extracts the name, and saves it in a new dataframe column called new_col
+
+    Parameters
+    ----------
+    df : dataframe
+    old_col : str
+    new_col : str
+
+    Returns
+    -------
+    df : dataframe
+    """
+    
+    import pandas as pd
+
+    def expand_name(nested_name):
+        """Takes an API JSON object with nested elements and extracts the name
+        Parameters
+        ----------
+        nested_name : JSON API object
+
+        Returns
+        -------
+        object_name : str
+        """
+        if pd.isnull(nested_name):
+            object_name = 'Likely Missing'
+        else:
+            object_name = nested_name['name']
+        return object_name
+
+    df[new_col] = df[old_col].apply(expand_name)
+    return df
+    
+
+
