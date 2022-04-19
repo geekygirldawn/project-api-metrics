@@ -1,14 +1,14 @@
 # Project API Metrics Jupyter Notebooks
 
-This is where I experiment with ideas or troubleshoot issues.
+This is where I experiment with ideas, troubleshoot issues,
+or explore data.
 
-These Jupyter Notebooks may not be very interesting, since
-the things that work will be converted into scripts in the 
-[scripts](../scripts) directory.
+Some of these notebooks have also been converted into scripts
+in the [scripts](../scripts) directory.
 
-However, I'm putting the notebooks in the repo, so that anyone
-who wants to have a closer look at the dataframes and other
-output can poke around and possibly customize them for your needs.
+The advantage of the notebooks is that you can have a closer look 
+at the dataframes and other output to poke around and customize
+them for your needs.
 
 These notebooks might also be useful for people who are more
 comfortable using Jupyter notebooks than running scripts.
