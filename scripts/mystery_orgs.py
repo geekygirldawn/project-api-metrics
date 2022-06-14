@@ -36,6 +36,7 @@ def make_query():
              organization(login:$org_name) {
                name
                url
+               websiteUrl
                createdAt
                updatedAt
                membersWithRole(first: 15){
@@ -91,7 +92,7 @@ def get_org_data(api_token):
 
     # Initialize list of lists with a header row.
     # Each embedded list will become a row in the csv file
-    all_rows = [['org_name', 'org_url', 'org_createdAt', 'org_updatedAt', 'people(login,name,email,company):repeat']]
+    all_rows = [['org_name', 'org_url', 'website', 'org_createdAt', 'org_updatedAt', 'people(login,name,email,company):repeat']]
     
     for org_name in org_list:
 
@@ -105,17 +106,20 @@ def get_org_data(api_token):
         json_data = json.loads(r.text)
 
         # Take the json_data file and expand the info about people horizontally into the 
-        # same row as the rest of the data about that org.        
-        for key in json_data['data']['organization']:
-            if key == 'membersWithRole':
-                for nkey in json_data['data']['organization'][key]['nodes']:
-                    row.append(nkey['login'])
-                    row.append(nkey['name'])
-                    row.append(nkey['email'])
-                    row.append(nkey['company'])
-            else:
-                row.append(json_data['data']['organization'][key])
-        all_rows.append(row)
+        # same row as the rest of the data about that org.  
+        try:      
+            for key in json_data['data']['organization']:
+                if key == 'membersWithRole':
+                    for nkey in json_data['data']['organization'][key]['nodes']:
+                        row.append(nkey['login'])
+                        row.append(nkey['name'])
+                        row.append(nkey['email'])
+                        row.append(nkey['company'])
+                else:
+                    row.append(json_data['data']['organization'][key])
+            all_rows.append(row)
+        except:
+            pass
         
     # prepare file and write rows to csv
 
