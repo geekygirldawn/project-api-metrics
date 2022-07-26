@@ -3,6 +3,7 @@ gh_key*
 
 # Orgs list
 *org*.txt
+*keyword*.txt
 
 # Output directory contents
 scripts/output/*.csv

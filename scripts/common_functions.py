@@ -55,6 +55,28 @@ def read_orgs(file_name):
 
     return org_list
 
+def read_file(file_name):
+    """Retrieves a list from a file.
+    
+    Parameters
+    ----------
+    file_name : str
+
+    Returns
+    -------
+    a_list : list
+    """
+    import csv
+
+    content_list = []
+
+    with open(file_name) as in_file:
+        content = csv.reader(in_file)
+        for row in content:
+            content_list.append(row[0])
+
+    return content_list
+
 def expand_name_df(df,old_col,new_col):
     """Takes a dataframe df with an API JSON object with nested elements in old_col, 
     extracts the name, and saves it in a new dataframe column called new_col
