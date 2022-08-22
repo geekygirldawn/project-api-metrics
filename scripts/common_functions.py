@@ -114,4 +114,34 @@ def expand_name_df(df,old_col,new_col):
     return df
     
 
+def get_criticality(org_name, repo_name, api_token):
+    """See https://github.com/ossf/criticality_score for more details
+    This function requires that you have this tool installed, and 
+    it might only run on mac / linux"""
+
+    import subprocess
+    import os
+    
+    os.environ['GITHUB_AUTH_TOKEN'] = api_token
+
+    cmd_str = 'criticality_score --repo github.com/' + org_name + '/' + repo_name + ' --format csv'
+
+    try:
+        proc = subprocess.Popen(cmd_str, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        out, err = proc.communicate()
+        
+        if not err:
+            csv_str = out.decode("utf-8")
+            items = csv_str.split(',')
+            dependents_count = items[25]
+            criticality_score = items[26].rstrip()
+        else: 
+            dependents_count = None
+            criticality_score = None
+    except:
+        dependents_count = None
+        criticality_score = None
+
+    return dependents_count, criticality_score
+
 
