@@ -203,13 +203,11 @@ for fork in repo_info_df['forks']['edges']:
 
         print(fork_updated, fork_owner_type, fork_url, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs)
 
-    print(all_rows)
+file, file_path = create_file("sunset")
 
-    file = create_file("sunset")
-
-    try:
-        with file:    
-            write = csv.writer(file)
-            write.writerows(all_rows)
-    except:
-        print('Could not write to csv file. This may be because the output directory is missing or you do not have permissions to write to it. Exiting')
+try:
+    with file:    
+        write = csv.writer(file)
+        write.writerows(all_rows)
+except:
+    print('Could not write to csv file. This may be because the output directory is missing or you do not have permissions to write to it. Exiting')
