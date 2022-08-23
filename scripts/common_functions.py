@@ -154,4 +154,6 @@ def create_file(pre_string):
     file_path = join(current_dir, output_filename)
     file = open(file_path, 'w', newline ='')
 
-    return file
+    print("Output file:\n", file_path, sep="")
+
+    return file, file_path
