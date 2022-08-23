@@ -1,6 +1,15 @@
 # Python Scripts
 
-These Python 3 scripts use the GitHub APIs to gather data.
+These Python scripts use the GitHub APIs to gather data.
+
+## Acceptable Use
+
+Note: Some of these scripts gather names and email addresses, which we use 
+to help us find a contact within VMware if we have questions about a 
+repository or org. Note that the [GitHub Acceptable Use
+Policies](https://docs.github.com/en/github/site-policy/github-acceptable-use-policies)
+prohibits certain usage of information, and I would encourage you to read
+this policy and not use scripts like these for unethical purposes.
 
 ## Requirements:
 
@@ -107,11 +116,3 @@ Requires orgs.txt
 $python3 mystery_orgs.py
 ```
 
-## Acceptable Use
-
-Note: Some of these scripts gather names and email addresses, which we use 
-to help us find a contact within VMware if we have questions about a 
-repository or org. Note that the [GitHub Acceptable Use
-Policies](https://docs.github.com/en/github/site-policy/github-acceptable-use-policies)
-prohibits certain usage of information, and I would encourage you to read
-this policy and not use scripts like these for unethical purposes.
