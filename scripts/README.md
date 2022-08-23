@@ -105,6 +105,7 @@ from the commit data.
 Requires orgs.txt
 ```
 $python3 mystery_orgs.py
+```
 
 ## Acceptable Use
 
