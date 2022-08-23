@@ -33,9 +33,7 @@ output/inclusivity_check_2022-01-14.csv"
 """
 
 import sys
-from common_functions import read_key, expand_name_df
-from datetime import datetime
-from os.path import dirname, join
+from common_functions import read_key, expand_name_df, create_file
 
 def make_query(after_cursor = None):
     """Creates and returns a GraphQL query with cursor for pagination"""
@@ -151,10 +149,7 @@ repo_info_df = repo_info_df.drop(columns=['defaultBranchRef', 'codeOfConduct'])
 # prepare file and write dataframe to csv
 
 try:
-    today = datetime.today().strftime('%Y-%m-%d')
-    output_filename = "./output/inclusivity_check_" + today + ".csv"
-    current_dir = dirname(__file__)
-    file_path = join(current_dir, output_filename)
+    file, file_path = create_file("inclusivity_check")
     repo_info_df.to_csv(file_path, index=False)
 
 except:

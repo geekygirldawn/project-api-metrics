@@ -75,10 +75,9 @@ def get_org_data(api_token):
     import requests
     import json
     import sys
-    from os.path import dirname, join
     import csv
     from datetime import datetime
-    from common_functions import read_orgs
+    from common_functions import read_orgs, create_file
 
     url = 'https://api.github.com/graphql'
     headers = {'Authorization': 'token %s' % api_token}
@@ -124,11 +123,7 @@ def get_org_data(api_token):
     # prepare file and write rows to csv
 
     try:
-        today = datetime.today().strftime('%Y-%m-%d')
-        output_filename = "./output/mystery_orgs_" + today + ".csv"
-        current_dir = dirname(__file__)
-        file_path = join(current_dir, output_filename)
-        file = open(file_path, 'w', newline ='')
+        file = create_file("mystery_orgs")
 
         with file:    
             write = csv.writer(file)

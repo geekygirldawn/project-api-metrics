@@ -3,7 +3,7 @@
 # Copyright 2022 VMware, Inc.
 # SPDX-License-Identifier: BSD-2-Clause
 
-"""Repo Activity REST API Version
+"""Repo Activity REST API Version - DEPRECATED Example only
 This script is comparison with the other script (repo_activity.py)
 which uses the GraphQL API. This one is very slow and should not
 be used to gather data.

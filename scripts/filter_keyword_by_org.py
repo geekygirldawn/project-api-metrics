@@ -29,9 +29,7 @@ As output:
 
 import sys
 import csv
-from datetime import datetime
-from os.path import dirname, join
-from common_functions import read_orgs 
+from common_functions import read_orgs, create_file 
 
 # Read list of orgs from a file
 try:
@@ -64,10 +62,8 @@ with open(file_name) as in_file:
 
     # prepare output file and write header and list to csv
     try:
-        today = datetime.today().strftime('%Y-%m-%d')
-        output_filename = "./output/keyword_search_org_filter_" + today + ".csv"
-        current_dir = dirname(__file__)
-        file_path = join(current_dir, output_filename)
+        file, file_path = create_file("keyword_search_org_filter")
+
         with open(file_path, "w") as out_file:
             wr = csv.writer(out_file)
             wr.writerow(header)
