@@ -1,14 +1,15 @@
 # Project Api Metrics
 
-This repo contains a few Python scripts that query the GitHub API to gather
-metrics related to project health and other activities.
+This repo contains a few Python scripts and Jupyter notebooks that query the
+GitHub API to gather metrics related to project health and other activities.
 
 I am also using this repo as I learn how to use the GitHub GraphQL API.
 
-## GraphQL API Scripts
-
 The [scripts](scripts/) directory contains the scripts and more information
 about how to run them.
+
+The [notebooks](notebooks/) directory contains Jupyter notebooks that allow
+you to explore the data gathered from the API.
 
 ## Contributing
 
