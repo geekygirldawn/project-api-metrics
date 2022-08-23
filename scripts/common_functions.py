@@ -144,4 +144,14 @@ def get_criticality(org_name, repo_name, api_token):
 
     return dependents_count, criticality_score
 
+def create_file(pre_string):
+    from datetime import datetime
+    from os.path import dirname, join
 
+    today = datetime.today().strftime('%Y-%m-%d')
+    output_filename = "./output/" + pre_string + "_" + today + ".csv"
+    current_dir = dirname(__file__)
+    file_path = join(current_dir, output_filename)
+    file = open(file_path, 'w', newline ='')
+
+    return file
