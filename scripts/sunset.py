@@ -5,11 +5,13 @@
 # Author: Dawn M. Foster <fosterd@vmware.com>
 
 """Gather data to determine whether a repo can be archived
-TODO Save output to a csv file after decided how best to format it.
-TODO Take as input a list of orgs from a file.
 
-Instructions to run the script with one repo url as input
-$python3 sunset.py https://github.com/vmware-tanzu/pinniped
+Run the script with one repo url as input
+$python3 sunset.py -u "https://github.com/vmware-tanzu/pinniped"
+
+Run the script with a csv file containing one repo_name,org_name pair
+per line:
+python3 sunset.py -f sunset.csv
 
 This script uses the GitHub GraphQL API to retrieve relevant
 information about a repository, including forks to determine ownership
@@ -39,10 +41,15 @@ emails to users or selling User Personal Information (as defined in the
 GitHub Privacy Statement), such as to recruiters, headhunters, and job boards."
 
 As output:
-* Currently prints details to the screen.
-* TODO print them to a file
+* Prints basic data about each repo processed to the screen to show progress.
+* the script creates a csv file stored in an subdirectory
+  of the folder with the script called "output" with the filename in 
+  this format with today's date.
+
+output/sunset_2022-01-14.csv"
 """
 
+import argparse
 import sys
 from common_functions import create_file, read_key, get_criticality
 from datetime import date
@@ -54,34 +61,32 @@ def make_query(after_cursor = None):
 
     return """query repo_forks($org_name: String!, $repo_name: String!){
         repository(owner: $org_name, name: $repo_name){
-            stargazerCount
-            forks (first:100, after: AFTER) {
+            forks (first:50, after: AFTER) {
                 pageInfo {
                     hasNextPage
                     endCursor
                 }
                 totalCount
-                edges {
-                    node {
-                    updatedAt
+                nodes {
+                updatedAt
+                url
+                owner {
+                    __typename
                     url
-                    owner {
-                        __typename
-                        url
-                        ... on User{
+                    ... on User{
+                    name
+                    company
+                    email
+                    organizations (last:50){
+                        nodes{
                         name
-                        company
-                        email
-                        organizations (last:50){
-                            nodes{
-                            name
-                            }
-                        }
                         }
                     }
                     }
-                    }
+                }
+                }
             }
+            stargazerCount
             }
         }""".replace(
             "AFTER", '"{}"'.format(after_cursor) if after_cursor else "null"
@@ -112,8 +117,6 @@ def get_fork_data(api_token, org_name, repo_name):
     has_next_page = True
     after_cursor = None
 
-    print(org_name, repo_name)
-
     while has_next_page:
         try:
             query = make_query(after_cursor)
@@ -122,28 +125,46 @@ def get_fork_data(api_token, org_name, repo_name):
             r = requests.post(url=url, json={'query': query, 'variables': variables}, headers=headers)
             json_data = json.loads(r.text)
 
-            #df_temp = pd.DataFrame(json_data["data"]["repository"]["forks"]["edges"])
-            df_temp = pd.DataFrame(json_data["data"]["repository"])
+            df_temp = pd.DataFrame(json_data["data"]["repository"]["forks"]["nodes"])
             repo_info_df = pd.concat([repo_info_df, df_temp])
+
+            num_forks = json_data["data"]["repository"]["forks"]["totalCount"]
+            num_stars = json_data["data"]["repository"]["stargazerCount"]
 
             has_next_page = json_data["data"]["repository"]["forks"]["pageInfo"]["hasNextPage"]
             after_cursor = json_data["data"]["repository"]["forks"]["pageInfo"]["endCursor"]
         except:
             has_next_page = False
+            num_forks = None
+            num_stars = None
             print("ERROR Cannot process")
 
-    return repo_info_df
+    return repo_info_df, num_forks, num_stars
 
-try:
-    gh_url = str(sys.argv[1])
+# Read arguments from the command line to specify whether the repo and org
+# should be read from a file for multiple repos or from a url to analyze 
+# a single repo
 
-except:
-    print("Please enter the URL for the GitHub repo. Example: https://github.com/vmware-tanzu/velero")
-    gh_url = input("Enter a URL: ")
+parser = argparse.ArgumentParser()
 
-url_parts = gh_url.strip('/').split('/')
-org_name = url_parts[3]
-repo_name = url_parts[4]
+parser.add_argument("-f", "--filename", dest = "csv_file", help="File name of a csv file containing one repo_name,org_name per line")
+parser.add_argument("-u", "--url", dest = "gh_url", help="URL for a GitHub repository")
+
+args = parser.parse_args()
+
+if args.csv_file:
+    with open(args.csv_file) as f:
+        reader = csv.reader(f)
+        repo_list = list(reader)
+
+if args.gh_url:
+    gh_url = args.gh_url
+
+    url_parts = gh_url.strip('/').split('/')
+    org_name = url_parts[3]
+    repo_name = url_parts[4]
+
+    repo_list = [[repo_name, org_name]]
 
 # Read GitHub key from file using the read_key function in 
 # common_functions.py
@@ -157,51 +178,51 @@ except:
 # Uses nine months as recently updated fork threshold
 recently_updated = str(date.today() + relativedelta(months=-9))
 
-repo_info_df = get_fork_data(api_token, org_name, repo_name)
+all_rows = [["Org", "Repo", "Stars", "Forks", "Dependents", "Crit Score", "fork url", "Fork last updated", "account type", "owner URL", "name", "company", "email", "Other orgs that the owner belongs to"]]
 
-all_rows = [["Org", "Repo", "Stars", "Forks", "Dependents","Crit Score", "fork url", "Fork last updated", "account type", "owner URL", "name", "company", "email", "Other orgs that the owner belongs to"]]
+for repo in repo_list:
+    org_name = repo[1]
+    repo_name = repo[0]
 
-dependents_count, criticality_score = get_criticality(org_name, repo_name, api_token)
-print("Dependents:", dependents_count)
-print("Criticality Score:", criticality_score, "(Values 0 to 1)")
+    repo_info_df, num_forks, num_stars = get_fork_data(api_token, org_name, repo_name)
 
-num_stars = repo_info_df['stargazerCount']['totalCount']
-num_forks = repo_info_df['forks']['totalCount']
-print("Stars:", num_stars, "Forks", num_forks)
-print("Recently updated forks")
-print("Fork last updated, account type, fork url, owner URL, name, company, email, Other orgs that the owner belongs to")
-for fork in repo_info_df['forks']['edges']:
-    if fork['node']['updatedAt'] > recently_updated:
-        fork_updated = fork['node']['updatedAt']
-        fork_url = fork['node']['url']
-        fork_owner_type = fork['node']['owner']['__typename']
-        fork_owner_url = fork['node']['owner']['url']
+    dependents_count, criticality_score = get_criticality(org_name, repo_name, api_token)
+
+    print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
+    
+    recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
+
+    for fork_obj in recent_forks_df.iterrows():
+        fork = fork_obj[1]
+
+        fork_updated = fork['updatedAt']
+        fork_url = fork['url']
+        fork_owner_type = fork['owner']['__typename']
+        fork_owner_url = fork['owner']['url']
         try:
-            fork_owner_name = fork['node']['owner']['name']
+            fork_owner_name = fork['owner']['name']
         except:
             fork_owner_name = None
         try:
-            fork_owner_company = fork['node']['owner']['company']
+            fork_owner_company = fork['owner']['company']
         except:
             fork_owner_company = None
         try:
-            fork_owner_email = fork['node']['owner']['email']
+            fork_owner_email = fork['owner']['email']
         except:
             fork_owner_email = None
         try:
             fork_owner_orgs = ''
-            for orgs in fork['node']['owner']['organizations']['nodes']:
+            for orgs in fork['owner']['organizations']['nodes']:
                 fork_owner_orgs = fork_owner_orgs + orgs['name'] + ';'
             fork_owner_orgs = fork_owner_orgs[:-1] #strip last ;
             if len(fork_owner_orgs) == 0:
                 fork_owner_orgs = None
         except:
             fork_owner_orgs = None
-        
+
         row = [org_name, repo_name, num_stars, num_forks, dependents_count, criticality_score, fork_url, fork_updated, fork_owner_type, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs]
         all_rows.append(row)
-
-        print(fork_updated, fork_owner_type, fork_url, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs)
 
 file, file_path = create_file("sunset")
 
