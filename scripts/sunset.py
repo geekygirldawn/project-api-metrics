@@ -7,11 +7,11 @@
 """Gather data to determine whether a repo can be archived
 
 Run the script with one repo url as input
-$python3 sunset.py -u "https://github.com/vmware-tanzu/pinniped"
+$python3 sunset.py -u "https://github.com/org_name/repo_name"
 
 Run the script with a csv file containing one repo_name,org_name pair
 per line:
-python3 sunset.py -f sunset.csv
+$python3 sunset.py -f sunset.csv
 
 This script uses the GitHub GraphQL API to retrieve relevant
 information about a repository, including forks to determine ownership
