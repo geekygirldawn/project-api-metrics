@@ -184,45 +184,48 @@ for repo in repo_list:
     org_name = repo[1]
     repo_name = repo[0]
 
-    repo_info_df, num_forks, num_stars = get_fork_data(api_token, org_name, repo_name)
+    try:
+        repo_info_df, num_forks, num_stars = get_fork_data(api_token, org_name, repo_name)
 
-    dependents_count, criticality_score = get_criticality(org_name, repo_name, api_token)
+        dependents_count, criticality_score = get_criticality(org_name, repo_name, api_token)
 
-    print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
-    
-    recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
+        print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
+        
+        recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
 
-    for fork_obj in recent_forks_df.iterrows():
-        fork = fork_obj[1]
+        for fork_obj in recent_forks_df.iterrows():
+            fork = fork_obj[1]
 
-        fork_updated = fork['updatedAt']
-        fork_url = fork['url']
-        fork_owner_type = fork['owner']['__typename']
-        fork_owner_url = fork['owner']['url']
-        try:
-            fork_owner_name = fork['owner']['name']
-        except:
-            fork_owner_name = None
-        try:
-            fork_owner_company = fork['owner']['company']
-        except:
-            fork_owner_company = None
-        try:
-            fork_owner_email = fork['owner']['email']
-        except:
-            fork_owner_email = None
-        try:
-            fork_owner_orgs = ''
-            for orgs in fork['owner']['organizations']['nodes']:
-                fork_owner_orgs = fork_owner_orgs + orgs['name'] + ';'
-            fork_owner_orgs = fork_owner_orgs[:-1] #strip last ;
-            if len(fork_owner_orgs) == 0:
+            fork_updated = fork['updatedAt']
+            fork_url = fork['url']
+            fork_owner_type = fork['owner']['__typename']
+            fork_owner_url = fork['owner']['url']
+            try:
+                fork_owner_name = fork['owner']['name']
+            except:
+                fork_owner_name = None
+            try:
+                fork_owner_company = fork['owner']['company']
+            except:
+                fork_owner_company = None
+            try:
+                fork_owner_email = fork['owner']['email']
+            except:
+                fork_owner_email = None
+            try:
+                fork_owner_orgs = ''
+                for orgs in fork['owner']['organizations']['nodes']:
+                    fork_owner_orgs = fork_owner_orgs + orgs['name'] + ';'
+                fork_owner_orgs = fork_owner_orgs[:-1] #strip last ;
+                if len(fork_owner_orgs) == 0:
+                    fork_owner_orgs = None
+            except:
                 fork_owner_orgs = None
-        except:
-            fork_owner_orgs = None
 
-        row = [org_name, repo_name, num_stars, num_forks, dependents_count, criticality_score, fork_url, fork_updated, fork_owner_type, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs]
-        all_rows.append(row)
+            row = [org_name, repo_name, num_stars, num_forks, dependents_count, criticality_score, fork_url, fork_updated, fork_owner_type, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs]
+            all_rows.append(row)
+    except:
+        print("Cannot process", repo_name, org_name)
 
 file, file_path = create_file("sunset")
 
