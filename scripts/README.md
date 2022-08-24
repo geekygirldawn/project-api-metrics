@@ -71,6 +71,29 @@ Requires orgs.txt
 $python3 repo_activity.py
 ```
 
+### Sunset
+
+This script uses the GitHub GraphQL API to Gather data to determine 
+whether a repo can be archived. It retrieves relevant
+information about a repository, including forks to determine ownership
+and possibly contact people to understand how they are using a project.
+
+As input, this script requires a GitHub URL for a repository or a csv
+file containing one repo_name,org_name pair per line.
+
+**Running the script**
+
+Run the script with one repo url as input
+```
+$python3 sunset.py -u "https://github.com/org_name/repo_name"
+```
+
+Run the script with a csv file containing one repo_name,org_name pair
+per line:
+```
+$python3 sunset.py -f sunset.csv
+```
+
 ### Keyword by Repo with Optional Filter
 
 The keyword_by_repo script uses the GitHub GraphQL API to retrieve
