@@ -180,6 +180,7 @@ except:
 # Uses nine months as recently updated fork threshold
 recently_updated = str(date.today() + relativedelta(months=-9))
 
+# all_rows it the variable that will be written to the csv file. This initializes it with a csv header line
 all_rows = [["Org", "Repo", "Status", "Stars", "Forks", "Dependents", "Crit Score", "fork url", "Fork last updated", "account type", "owner URL", "name", "company", "email", "Other orgs that the owner belongs to"]]
 
 for repo in repo_list:
@@ -202,6 +203,9 @@ for repo in repo_list:
 
             print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
             
+            # We only need recent forks in the csv file, so this creates a subset of the dataframe.
+            # If there are no recent forks (empty df), only the basic repo info is
+            # written to the csv file. Otherwise, details about the forks are gathered and added to the csv.
             recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
 
             if len(recent_forks_df) == 0:
@@ -250,7 +254,7 @@ for repo in repo_list:
         row = [org_name, repo_name, status]
         all_rows.append(row)
         
-
+# Create csv output file and write to it.
 file, file_path = create_file("sunset")
 
 try:

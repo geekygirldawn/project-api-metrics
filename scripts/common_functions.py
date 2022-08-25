@@ -117,7 +117,21 @@ def expand_name_df(df,old_col,new_col):
 def get_criticality(org_name, repo_name, api_token):
     """See https://github.com/ossf/criticality_score for more details
     This function requires that you have this tool installed, and 
-    it might only run on mac / linux"""
+    it might only run on mac / linux
+    
+    Parameters
+    ----------
+    org_name : str
+    repo_name : str
+    api_token : str
+
+    Returns
+    -------
+    dependents_count : int
+    criticality_score : float
+        This value ranges from 0 to 1 with lower scores indicating less critical projects.
+    
+    """
 
     import subprocess
     import os
@@ -145,6 +159,22 @@ def get_criticality(org_name, repo_name, api_token):
     return dependents_count, criticality_score
 
 def create_file(pre_string):
+    """Creates an output file in an "output" directory with today's date
+    as part of the filename and prints the file_path to the terminal to
+    make it easier to open the output file.
+    
+    Parameters
+    ----------
+    pre_string : str
+        This is the string that will preface today's date in the filename
+
+    Returns
+    -------
+    file : file object
+    file_path : str
+        This is the full path to the file name for the output.
+    
+    """
     from datetime import datetime
     from os.path import dirname, join
 
