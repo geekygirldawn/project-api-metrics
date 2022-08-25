@@ -206,8 +206,10 @@ for repo in repo_list:
             # criticality_score sometimes fails in a way that is not reflected in it's own error status
             # and dumps an error message into this variable. I suspect it's caused by a timeout, since it
             # seems to happen mostly with very large repos. This is to clean that up and make the csv
-            # file more readable.
-            if isinstance(criticality_score, str):
+            # file more readable. The check is for isnumeric because Criticality Score returns strings 
+            # for some reason.
+
+            if dependents_count.isnumeric() is False:
                 criticality_score = "Error"
                 dependents_count = "Error"
 

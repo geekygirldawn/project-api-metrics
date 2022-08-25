@@ -127,9 +127,10 @@ def get_criticality(org_name, repo_name, api_token):
 
     Returns
     -------
-    dependents_count : int
-    criticality_score : float
-        This value ranges from 0 to 1 with lower scores indicating less critical projects.
+    dependents_count : str
+        Numeric integer that is returned as a string
+    criticality_score : str
+        This value ranges from 0 to 1 (like a float) with lower scores indicating less critical projects.
     
     """
 
