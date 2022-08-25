@@ -93,16 +93,25 @@ def make_query(after_cursor = None):
     )
 
 def get_fork_data(api_token, org_name, repo_name):
-    """Executes the GraphQL query to get repository data from one or more GitHub orgs.
+    """Executes the GraphQL query to get repository data.
 
     Parameters
     ----------
     api_token : str
         The GH API token retrieved from the gh_key file.
+    org_name and repo_name : str
+        The GitHub organization name and repository name to analyze.
 
     Returns
     -------
-    ?????
+    repo_info_df : pandas dataframe
+        Dataframe with all of the output from the API query
+    num_forks : int
+        Number of forks for the repo
+    num_stars : int
+        Number of stars for the repo
+    status : str
+        Value is "OK" or "Error" depending on whether data could be gathered for that org/repo pair
     """
 
     import requests
@@ -200,6 +209,7 @@ for repo in repo_list:
             # file more readable.
             if isinstance(criticality_score, str):
                 criticality_score = "Error"
+                dependents_count = "Error"
 
             print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
             
