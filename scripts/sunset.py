@@ -193,6 +193,13 @@ for repo in repo_list:
 
             dependents_count, criticality_score = get_criticality(org_name, repo_name, api_token)
 
+            # criticality_score sometimes fails in a way that is not reflected in it's own error status
+            # and dumps an error message into this variable. I suspect it's caused by a timeout, since it
+            # seems to happen mostly with very large repos. This is to clean that up and make the csv
+            # file more readable.
+            if isinstance(criticality_score, str):
+                criticality_score = "Error"
+
             print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
             
             recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
