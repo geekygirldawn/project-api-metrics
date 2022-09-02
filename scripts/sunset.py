@@ -6,19 +6,25 @@
 
 """Gather data to determine whether a repo can be archived
 
-Run the script with one repo url as input
-$python3 sunset.py -u "https://github.com/org_name/repo_name"
-
-Run the script with a csv file containing one repo_name,org_name pair
-per line:
-$python3 sunset.py -f sunset.csv
-
 This script uses the GitHub GraphQL API to retrieve relevant
 information about a repository, including forks to determine ownership
 and possibly contact people to understand how they are using a project.
 More detailed information is gathered about recently updated forks and 
 their owners with the recently updated threshold set in a variable called
 recently_updated (currently set to 9 months).
+
+Usage
+-----
+
+Run the script with one repo url as input
+    $python3 sunset.py -u "https://github.com/org_name/repo_name"
+
+Run the script with a csv file containing one repo_name,org_name pair
+per line:
+    $python3 sunset.py -f sunset.csv
+
+Dependencies and Requirements
+-----------------------------
 
 This script depends on another tool called Criticality Score to run.
 See https://github.com/ossf/criticality_score for more details, including
@@ -40,7 +46,9 @@ for spamming purposes, including for the purposes of sending unsolicited
 emails to users or selling User Personal Information (as defined in the
 GitHub Privacy Statement), such as to recruiters, headhunters, and job boards."
 
-As output:
+Output
+------
+
 * Prints basic data about each repo processed to the screen to show progress.
 * the script creates a csv file stored in an subdirectory
   of the folder with the script called "output" with the filename in 
@@ -204,7 +212,7 @@ for repo in repo_list:
             dependents_count, criticality_score = get_criticality(org_name, repo_name, api_token)
 
             # criticality_score sometimes fails in a way that is not reflected in it's own error status
-            # and dumps an error message into this variable. I suspect it's caused by a timeout, since it
+            # and dumps an error message into these variables. I suspect it's caused by a timeout, since it
             # seems to happen mostly with very large repos. This is to clean that up and make the csv
             # file more readable. The check is for isnumeric because Criticality Score returns strings 
             # for some reason.
