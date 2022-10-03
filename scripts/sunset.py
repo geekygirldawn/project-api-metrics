@@ -265,9 +265,10 @@ for repo in repo_list:
                             fork_owner_orgs = None
 
                         row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score, fork_url, fork_updated, fork_owner_type, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs]
+                        all_rows.append(row)
             else:
                 row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score, None, None, None, None, None, None, None, None]
-            all_rows.append(row)
+                all_rows.append(row)
         else:
             print("Cannot process", org_name, repo_name)
             row = [org_name, repo_name, status]
