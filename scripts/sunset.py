@@ -19,7 +19,7 @@ Usage
 Run the script with one repo url as input
     $python3 sunset.py -u "https://github.com/org_name/repo_name"
 
-Run the script with a csv file containing one repo_name,org_name pair
+Run the script with a csv file containing one org_name,repo_name pair
 per line:
     $python3 sunset.py -f sunset.csv
 
@@ -183,7 +183,7 @@ if args.gh_url:
     org_name = url_parts[3]
     repo_name = url_parts[4]
 
-    repo_list = [[repo_name, org_name]]
+    repo_list = [[org_name,repo_name]]
 
 # Read GitHub key from file using the read_key function in 
 # common_functions.py
@@ -201,8 +201,8 @@ recently_updated = str(date.today() + relativedelta(months=-9))
 all_rows = [["Org", "Repo", "Status", "Stars", "Forks", "Dependents", "Crit Score", "fork url", "Fork last updated", "account type", "owner URL", "name", "company", "email", "Other orgs that the owner belongs to"]]
 
 for repo in repo_list:
-    org_name = repo[1]
-    repo_name = repo[0]
+    org_name = repo[0]
+    repo_name = repo[1]
 
     try:
         repo_info_df, num_forks, num_stars, status = get_fork_data(api_token, org_name, repo_name)
@@ -223,54 +223,58 @@ for repo in repo_list:
 
             print(org_name, repo_name, "Dependents:", dependents_count, "Criticality Score:", criticality_score, "Stars", num_stars, "Forks", num_forks)
             
-            # We only need recent forks in the csv file, so this creates a subset of the dataframe.
-            # If there are no recent forks (empty df), only the basic repo info is
-            # written to the csv file. Otherwise, details about the forks are gathered and added to the csv.
-            recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
+            # Only run this section if there are forks
+            if num_forks > 0:
+                # We only need recent forks in the csv file, so this creates a subset of the dataframe.
+                # If there are no recent forks (empty df), only the basic repo info is
+                # written to the csv file. Otherwise, details about the forks are gathered and added to the csv.
+                recent_forks_df = repo_info_df.loc[repo_info_df['updatedAt'] > recently_updated]
 
-            if len(recent_forks_df) == 0:
-                row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score]
-                all_rows.append(row)
-                
-            else:
-                for fork_obj in recent_forks_df.iterrows():
-                    fork = fork_obj[1]
-
-                    fork_updated = fork['updatedAt']
-                    fork_url = fork['url']
-                    fork_owner_type = fork['owner']['__typename']
-                    fork_owner_url = fork['owner']['url']
-                    try:
-                        fork_owner_name = fork['owner']['name']
-                    except:
-                        fork_owner_name = None
-                    try:
-                        fork_owner_company = fork['owner']['company']
-                    except:
-                        fork_owner_company = None
-                    try:
-                        fork_owner_email = fork['owner']['email']
-                    except:
-                        fork_owner_email = None
-                    try:
-                        fork_owner_orgs = ''
-                        for orgs in fork['owner']['organizations']['nodes']:
-                            fork_owner_orgs = fork_owner_orgs + orgs['name'] + ';'
-                        fork_owner_orgs = fork_owner_orgs[:-1] #strip last ;
-                        if len(fork_owner_orgs) == 0:
-                            fork_owner_orgs = None
-                    except:
-                        fork_owner_orgs = None
-
-                    row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score, fork_url, fork_updated, fork_owner_type, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs]
+                if len(recent_forks_df) == 0:
+                    row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score]
                     all_rows.append(row)
+                    
+                else:
+                    for fork_obj in recent_forks_df.iterrows():
+                        fork = fork_obj[1]
+
+                        fork_updated = fork['updatedAt']
+                        fork_url = fork['url']
+                        fork_owner_type = fork['owner']['__typename']
+                        fork_owner_url = fork['owner']['url']
+                        try:
+                            fork_owner_name = fork['owner']['name']
+                        except:
+                            fork_owner_name = None
+                        try:
+                            fork_owner_company = fork['owner']['company']
+                        except:
+                            fork_owner_company = None
+                        try:
+                            fork_owner_email = fork['owner']['email']
+                        except:
+                            fork_owner_email = None
+                        try:
+                            fork_owner_orgs = ''
+                            for orgs in fork['owner']['organizations']['nodes']:
+                                fork_owner_orgs = fork_owner_orgs + orgs['name'] + ';'
+                            fork_owner_orgs = fork_owner_orgs[:-1] #strip last ;
+                            if len(fork_owner_orgs) == 0:
+                                fork_owner_orgs = None
+                        except:
+                            fork_owner_orgs = None
+
+                        row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score, fork_url, fork_updated, fork_owner_type, fork_owner_url, fork_owner_name, fork_owner_company, fork_owner_email, fork_owner_orgs]
+            else:
+                row = [org_name, repo_name, status, num_stars, num_forks, dependents_count, criticality_score, None, None, None, None, None, None, None, None]
+            all_rows.append(row)
         else:
-            print("Cannot process", repo_name, org_name)
+            print("Cannot process", org_name, repo_name)
             row = [org_name, repo_name, status]
             all_rows.append(row)
     except:
         status = "Error"
-        print("Cannot process", repo_name, org_name)
+        print("Cannot process",  org_name, repo_name)
         row = [org_name, repo_name, status]
         all_rows.append(row)
         
