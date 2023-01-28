@@ -41,7 +41,7 @@ def make_query(before_cursor = None):
     pullRequests (last: 10, before: BEFORE) {
         pageInfo{
             hasPreviousPage
-            endCursor
+            startCursor
         }
         nodes {
           createdAt
@@ -50,13 +50,16 @@ def make_query(before_cursor = None):
           deletions
           changedFiles
           state
+          comments{
+            totalCount
+          }
           author{
             ... on User{
             	login
-              name
-              pullRequests{
-                totalCount
-              }
+                name
+                pullRequests{
+                    totalCount
+                }
           	}
           }
         }
@@ -110,12 +113,12 @@ def get_pr_data(api_token, org_name, repo_name, num_pages):
     
     repo_info_df = pd.DataFrame()
 
-    has_next_page = True
+    has_previous_page = True
     before_cursor = None
 
     i = 1 # Iterator starts at page 1
 
-    while has_next_page and i <= num_pages:
+    while has_previous_page and i <= num_pages:
         i+=1
         try:
             query = make_query(before_cursor)
@@ -127,12 +130,12 @@ def get_pr_data(api_token, org_name, repo_name, num_pages):
             df_temp = pd.DataFrame(json_data["data"]["repository"]["pullRequests"]["nodes"])
             repo_info_df = pd.concat([repo_info_df, df_temp])
 
-            has_next_page = json_data["data"]["repository"]["pullRequests"]["pageInfo"]["hasPreviousPage"]
-            before_cursor = json_data["data"]["repository"]["pullRequests"]["pageInfo"]["endCursor"]
+            has_previous_page = json_data["data"]["repository"]["pullRequests"]["pageInfo"]["hasPreviousPage"]
+            before_cursor = json_data["data"]["repository"]["pullRequests"]["pageInfo"]["startCursor"]
 
             status = "OK"
         except:
-            has_next_page = False
+            has_previous_page = False
             status = "Error"
 
     return repo_info_df, status
@@ -147,9 +150,18 @@ def expand_author(author):
         author_list = [author['login'], author['name'], author['pullRequests']['totalCount']]
     return author_list
 
+def expand_count(comments):
+    import pandas as pd
+    if pd.isnull(comments):
+        comment_ct = 0
+    else:
+        comment_ct = comments['totalCount']
+    return comment_ct
+
 repo_info_df['author_list'] = repo_info_df['author'].apply(expand_author)
 repo_info_df[['author_login', 'author_name', 'author_pr_count', ]] = pd.DataFrame(repo_info_df.author_list.tolist(), index= repo_info_df.index)
-repo_info_df = repo_info_df.drop(columns=['author','author_list'])
+repo_info_df['comment_ct'] = repo_info_df['comments'].apply(expand_count)
+repo_info_df = repo_info_df.drop(columns=['author','author_list','comments'])
 
 # prepare file and write dataframe to csv
 
