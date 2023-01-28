@@ -4,6 +4,7 @@ gh_key*
 # Input files
 *org*.txt
 *keyword*.txt
+*monitoring*.txt
 *.csv
 
 # Output directory contents
