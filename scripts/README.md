@@ -94,6 +94,19 @@ per line:
 $python3 sunset.py -f sunset.csv
 ```
 
+### Monitoring
+
+This script uses the GitHub GraphQL API to retrieve the pinned repos
+for each GitHub org listed in monitoring.txt and runs criticality score
+for each of those pinned repositories.
+
+**Running the script**
+
+Requires monitoring.txt
+```
+$python3 monitoring.py
+```
+
 ### Keyword by Repo with Optional Filter
 
 The keyword_by_repo script uses the GitHub GraphQL API to retrieve
