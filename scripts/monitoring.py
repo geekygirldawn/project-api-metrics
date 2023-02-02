@@ -7,12 +7,16 @@
 """Calculate OSSF's Criticality Score for pinned repos on a list of orgs
 
 This script uses the GitHub GraphQL API to retrieve a list of pinned
-repositories from a list of GitHub organizations, and then runs 
-criticality score on each of those repos. 
+repositories from a list of GitHub organizations and then runs 
+criticality score on each of those repos. It can also take an individual 
+repo URL as one of the inputs
 
-As input, this script requires a file named 'monitoring.txt' containing
-the name of one GitHub org per line residing in the same folder 
-as this script.
+As input, this script requires a file named 'monitoring.txt' residing in
+the same folder as this script. This file should contain the name of one
+GitHub org or URL to an individual repository per line. Example file format:
+    vmware
+    https://github.com/greenplum-db/gpdb
+    vmware-tanzu
 
 Your API key should be stored in a file called gh_key in the
 same folder as this script.
@@ -81,19 +85,26 @@ headers = {'Authorization': 'token %s' % api_token}
 repo_list = []
 
 for org_name in org_list:
+    # To handle both orgs and individual repos ...
+    # Maybe split this into 2. If startswith http, run crit score on that URL
+    # Otherwise run this query for pinned items on an org
 
-    query = make_query()
+    if org_name.startswith('http'):
+        repo_list.append(org_name)
 
-    variables = {"org_name": org_name}
-    r = requests.post(url=url, json={'query': query, 'variables': variables}, headers=headers)
-    json_data = json.loads(r.text)
+    else:
+        query = make_query()
 
-    # Wrap in try/except for when org isn't valid.
-    try:
-        for url_dict in json_data['data']['organization']['pinnedItems']['nodes']:
-            repo_list.append(url_dict['url'])
-    except:
-        print("Could not get data on", org_name, "- check to make sure the org name is correct and has pinned repos")
+        variables = {"org_name": org_name}
+        r = requests.post(url=url, json={'query': query, 'variables': variables}, headers=headers)
+        json_data = json.loads(r.text)
+
+        # Wrap in try/except for when org isn't valid.
+        try:
+            for url_dict in json_data['data']['organization']['pinnedItems']['nodes']:
+                repo_list.append(url_dict['url'])
+        except:
+            print("Could not get data on", org_name, "- check to make sure the org name is correct and has pinned repos")
 
 # For each repo in repo_list, run criticality_score and append
 # the json output to csv_row_list
