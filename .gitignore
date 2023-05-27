@@ -16,6 +16,7 @@ scripts/exp*
 
 # VS Code files
 /.vscode/
+.vscode
 
 # MacOS files
 .DS_Store
