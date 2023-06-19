@@ -116,8 +116,12 @@ def expand_name_df(df,old_col,new_col):
 
 def get_criticality(org_name, repo_name, api_token):
     """See https://github.com/ossf/criticality_score for more details
-    This function requires that you have this tool installed, and 
-    it might only run on mac / linux
+    This function requires that you have version 1.0.7 of this tool 
+    installed (the older Python version but not the final Python version,
+    which doesn't work for some reason within the script - possibly because
+    of how they've implemented the deprecation warnings). You can install
+    the correct version using:
+    pip install 'criticality-score<1.0.8' --force-reinstall
     
     Parameters
     ----------
