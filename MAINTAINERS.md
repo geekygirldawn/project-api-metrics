@@ -2,4 +2,4 @@
 
 | Maintainer | GitHub ID | Affiliation |
 | --------------- | --------- | ----------- |
-| Dawn Foster | [geekygirldawn](https://github.com/geekygirldawn) | [VMware](https://www.github.com/vmware/) |
+| Dawn Foster | [geekygirldawn](https://github.com/geekygirldawn) | [CHAOSS Project](https://github.com/chaoss) |

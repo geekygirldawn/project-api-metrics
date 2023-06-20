@@ -20,8 +20,8 @@ Note that it will only find CONTRIBUTING.md files that match that exact
 name and case (not contributing.md or contributing.rst) in public, but
 not private repos.
 
-We use this script at VMware to gather basic data about the repositories
-found in dozens of VMware GitHub orgs. We use this to understand whether
+We use this script to gather basic data about the repositories
+found in dozens of GitHub orgs. We use this to understand whether
 projects are meeting our compliance requirements. We also use this 
 script to find abandoned repos that have outlived their usefulness
 and should be archived.

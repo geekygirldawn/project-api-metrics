@@ -5,7 +5,7 @@ These Python scripts use the GitHub APIs to gather data.
 ## Acceptable Use
 
 Note: Some of these scripts gather names and email addresses, which we use 
-to help us find a contact within VMware if we have questions about a 
+to help us find a contact if we have questions about a 
 repository or org. Note that the [GitHub Acceptable Use
 Policies](https://docs.github.com/en/github/site-policy/github-acceptable-use-policies)
 prohibits certain usage of information, and I would encourage you to read
@@ -53,11 +53,11 @@ any rate limits.
     scripts/repo_activity_coc.py
     scripts/repo_activity_REST.py
 
-We use this script at VMware to gather basic data about the repositories
-found in dozens of VMware GitHub orgs. We use this to understand whether
-projects are meeting our compliance requirements. We also use this 
-script to find abandoned repos that have outlived their usefulness
-and should be archived.
+We used this script to gather basic data about the repositories found across
+dozens of an organization's GitHub orgs. We use this to understand whether
+projects are meeting our compliance requirements. We also use this script to
+find abandoned repos that have outlived their usefulness and should be
+archived.
 
 Note: repo_activity_coc.py is mostly identical to repo_activity.py, 
 but it adds info about the code of conduct. This is a separate script

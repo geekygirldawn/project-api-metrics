@@ -5,7 +5,7 @@
 This script uses the GitHub GraphQL API to retrieve relevant
 information about one or more GitHub orgs.
 
-We use this script at VMware to gather basic data about GitHub orgs that
+We use this script at to gather basic data about GitHub orgs that
 we believe may have been created outside of our process by various
 employees across our business units. We gather the first few members
 of the org to help identify employees who can provide more details
