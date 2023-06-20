@@ -34,7 +34,7 @@ version but not the final Python version, which doesn't work for
 some reason within the script - possibly because of how they've 
 implemented the deprecation warnings). You can install the correct version
 using:
-pip install 'criticality-score<1.0.8' --force-reinstall
+pip install criticality-score==1.0.7
 
 Your API key should be stored in a file called gh_key in the
 same folder as this script.

@@ -121,7 +121,7 @@ def get_criticality(org_name, repo_name, api_token):
     which doesn't work for some reason within the script - possibly because
     of how they've implemented the deprecation warnings). You can install
     the correct version using:
-    pip install 'criticality-score<1.0.8' --force-reinstall
+    pip install criticality-score==1.0.7
     
     Parameters
     ----------
