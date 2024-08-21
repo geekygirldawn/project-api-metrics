@@ -99,7 +99,7 @@ try:
     api_token = read_key('gh_key')
 
 except:
-    print("Error reading GH Key. This script depends on the existance of a file called gh_key containing your GitHub API token. Exiting")
+    print("Error reading GH Key. This script depends on the existence of a file called gh_key containing your GitHub API token. Exiting")
     sys.exit()
 
 def get_repo_data(api_token):
