@@ -10,6 +10,7 @@ gh_key*
 # Output directory contents
 scripts/output/*.csv
 notebooks/output/*.csv
+*.pkl
 
 # Experimental scripts
 scripts/exp*
