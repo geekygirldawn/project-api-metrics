@@ -209,14 +209,17 @@ def create_person_dict(pickle_file, repo_name, since_date, until_date):
                     else:
                         person_dict[login]['email'] = [commit_email,login_email]
             except:
-                if fail_person_dict[commit_email]:
-                    fail_person_dict[commit_email]['commits'] = fail_person_dict[commit_email]['commits'] + 1
-                    fail_person_dict[commit_email]['additions'] = fail_person_dict[commit_email]['additions'] + data['additions']
-                    fail_person_dict[commit_email]['deletions'] = fail_person_dict[commit_email]['deletions'] + data['deletions']
-                else:
-                    fail_person_dict[commit_email]['commits'] = 1
-                    fail_person_dict[commit_email]['additions'] = data['additions']
-                    fail_person_dict[commit_email]['deletions'] = data['deletions']
+                try:
+                    if fail_person_dict[commit_email]:
+                        fail_person_dict[commit_email]['commits'] = fail_person_dict[commit_email]['commits'] + 1
+                        fail_person_dict[commit_email]['additions'] = fail_person_dict[commit_email]['additions'] + data['additions']
+                        fail_person_dict[commit_email]['deletions'] = fail_person_dict[commit_email]['deletions'] + data['deletions']
+                    else:
+                        fail_person_dict[commit_email]['commits'] = 1
+                        fail_person_dict[commit_email]['additions'] = data['additions']
+                        fail_person_dict[commit_email]['deletions'] = data['deletions']
+                except:
+                    print("Unknown Exception on", y)
 
     # For every email that didn't have a GH login / user, search for that email in the
     # person_dict and if found, add the commits, additions, and deletions to the proper user
