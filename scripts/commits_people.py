@@ -1,6 +1,9 @@
 # Copyright Dawn M. Foster
 # SPDX-License-Identifier: MIT
 
+# DEPRECATED. This script has been moved to the CHAOSS Data Science WG repo
+# https://github.com/chaoss/wg-data-science/blob/main/dataset/license-changes/fork-case-study/commits_people.py
+
 """Gets Commit Data 
 This is aggregated per person for a repo between two specified dates.
 I'm currently using this to better understand who contributes to a project
